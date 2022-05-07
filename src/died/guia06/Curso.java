@@ -29,7 +29,16 @@ public class Curso {
 		super();
 		this.inscriptos = new ArrayList<Alumno>();
 		this.log = new Registro();
+		this.creditosRequeridos = 1000;
+		this.cupo=0;
 	}
+	public Curso(int cred) {
+		super();
+		this.inscriptos = new ArrayList<Alumno>();
+		this.log = new Registro();
+		this.creditosRequeridos = cred;
+	}
+	
 	
 
 	/**
@@ -45,17 +54,46 @@ public class Curso {
 	 * @param a
 	 * @return
 	 */
-	public Boolean inscribir(Alumno a) {
+	public Boolean inscribir(Alumno a){
+		try {
 		log.registrar(this, "inscribir ",a.toString());
+		}
+		catch(Exception e1) {
+			System.out.println("Error");
+			e1.printStackTrace();
+		}
 		return false;
-	}
+		}
+	
+	public void inscribirAlumno(Alumno a) throws  CreditosInsuficientes, CuposInsuficientes, CursandoMasMaterias{
+
+		if(this.creditosRequeridos > a.creditosObtenidos()) {
+			throw new CreditosInsuficientes("No tiene creditos suficientes");
+		}
+		if(this.inscriptos.size() > this.cupo) {
+			throw new CuposInsuficientes("No hay cupo");
+		}
+		if(a.materiasCursando() >= 3){
+			throw new CursandoMasMaterias("Ya está cursando más de 3(tres) materias");
+		}
+		else {
+			this.inscriptos.add(a);
+			System.out.println("Se ha inscripto el alumno");
+		}
+		
+	} 
 	
 	
 	/**
 	 * imprime los inscriptos en orden alfabetico
 	 */
 	public void imprimirInscriptos() {
+		try {
 		log.registrar(this, "imprimir listado",this.inscriptos.size()+ " registros ");
+		}
+		catch(Exception e2) {
+			System.out.println("Error");
+		}
 	}
 
 
